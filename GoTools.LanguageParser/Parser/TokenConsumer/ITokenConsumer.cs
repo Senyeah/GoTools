@@ -12,7 +12,7 @@ public interface ITokenConsumer<in TLanguageToken> where TLanguageToken : struct
 
     bool IsAnyConsumable(params TLanguageToken[] tokens);
 
-    bool IsAnyConsumableAhead(int from, params TLanguageToken[] expectedTokens);
+    bool IsAnyConsumableAhead(int from, params TLanguageToken[] anyToken);
 
     bool IsConsumable(TLanguageToken token);
 

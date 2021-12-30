@@ -70,15 +70,20 @@ public abstract class Tokenizer<TLanguageToken> : IDisposable where TLanguageTok
                     var matchedSymbol = buffer.ToString(matchedSymbolIndex.Value, index - matchedSymbolIndex.Value);
                     matchedSymbolIndex = null;
 
-                    if (IsValidSymbol(matchedSymbol))
+                    if (IsValidSymbol(matchedSymbol) && emitSymbolCount > 0)
+                    {
+                        emitSymbolCount -= 1;
                         yield return EmitSymbol(matchedSymbol);
+                    }
                 }
 
                 index += matchingToken.Length;
 
                 yield return EmitNonSymbol(matchingToken, out var expectedSymbolCount);
 
-                if (emitSymbolCount == 0 && expectedSymbolCount > 0 || expectedSymbolCount == 0)
+                // Only set when we're not looking for any symbols, or when we should stop looking
+                //if (emitSymbolCount == 0 && expectedSymbolCount > 0 || expectedSymbolCount == 0)
+                if (expectedSymbolCount is not null)
                 {
                     emitSymbolCount = expectedSymbolCount.Value;
                 }

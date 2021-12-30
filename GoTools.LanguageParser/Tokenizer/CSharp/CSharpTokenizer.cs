@@ -28,7 +28,8 @@ public sealed class CSharpTokenizer : Tokenizer<CSharpToken>
         { "=>", CSharpToken.LambdaBodyToken },
         { "?", CSharpToken.QuestionMarkToken },
         { ":", CSharpToken.ColonToken },
-        { ";", CSharpToken.SemicolonToken }
+        { ";", CSharpToken.SemicolonToken },
+        { ",", CSharpToken.CommaToken }
     };
 
     public CSharpTokenizer(Stream byteStream)
@@ -48,6 +49,8 @@ public sealed class CSharpTokenizer : Tokenizer<CSharpToken>
             CSharpToken.RecordDeclaration => 1,
             CSharpToken.ColonToken => 1,
             CSharpToken.UsingKeyword => 1,
+            CSharpToken.LambdaBodyToken => 1,
+            CSharpToken.CommaToken => 1,
             CSharpToken.OpenBraceToken => 0,
             _ => null
         };
@@ -63,5 +66,5 @@ public sealed class CSharpTokenizer : Tokenizer<CSharpToken>
         };
 
     protected override bool IsSymbolTerminationCharacter(char c)
-        => c is '(' or ')' or '?' or ';' || char.IsWhiteSpace(c);
+        => c is '(' or ')' or '?' or ';' or '[' or ',' || char.IsWhiteSpace(c);
 }

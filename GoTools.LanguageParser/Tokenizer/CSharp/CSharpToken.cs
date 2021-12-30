@@ -23,5 +23,6 @@ public enum CSharpToken
     CloseBracketToken,
     LambdaBodyToken,
     QuestionMarkToken,
+    CommaToken,
     Symbol
 }
