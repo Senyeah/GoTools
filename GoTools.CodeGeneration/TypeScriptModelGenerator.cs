@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using GoTools.LanguageParser.Parser;
 
-namespace GoTools.LanguageParser.CodeGeneration;
+namespace GoTools.CodeGeneration;
 
 public class TypeScriptModelGenerator : IModelGenerator
 {

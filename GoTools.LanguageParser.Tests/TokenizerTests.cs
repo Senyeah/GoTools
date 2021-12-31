@@ -1,30 +1,15 @@
 using GoTools.LanguageParser.Tokenizer.CSharp;
-using GoTools.LanguageParser.ParsedToken;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace GoTools.LanguageParser.Tests;
 
 [TestClass]
-public class TokenizerTests
+public class TokenizerTests : TestBase
 {
-    private static ParsedToken<CSharpToken>[] Tokenize(string text)
-    {
-        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(text));
-        using var tokenizer = new CSharpTokenizer(stream);
-
-        return tokenizer
-            .Tokenize()
-            .Cast<ParsedToken<CSharpToken>>()
-            .ToArray();
-    }
-
     [TestMethod]
     public void TokenizesCSharpSimpleModel()
     {
-        var tokens = Tokenize(@"
+        var tokens = TokenizeCSharp(@"
             using System;
             using System.Text;
 
@@ -40,51 +25,51 @@ public class TokenizerTests
 
         Assert.AreEqual(33, tokens.Length);
 
-        Assert.AreEqual(tokens[0], new() { Declaration = CSharpToken.UsingKeyword });
-        Assert.AreEqual(tokens[1], new() { Declaration = CSharpToken.Symbol, Identifier = "System" });
-        Assert.AreEqual(tokens[2], new() { Declaration = CSharpToken.SemicolonToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.UsingKeyword }, tokens[0]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "System" }, tokens[1]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[2]);
 
-        Assert.AreEqual(tokens[3], new() { Declaration = CSharpToken.UsingKeyword });
-        Assert.AreEqual(tokens[4], new() { Declaration = CSharpToken.Symbol, Identifier = "System.Text" });
-        Assert.AreEqual(tokens[5], new() { Declaration = CSharpToken.SemicolonToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.UsingKeyword }, tokens[3]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "System.Text" }, tokens[4]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[5]);
 
-        Assert.AreEqual(tokens[6], new() { Declaration = CSharpToken.NamespaceDeclaration });
-        Assert.AreEqual(tokens[7], new() { Declaration = CSharpToken.Symbol, Identifier = "Test" });
-        Assert.AreEqual(tokens[8], new() { Declaration = CSharpToken.OpenBraceToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.NamespaceDeclaration }, tokens[6]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "Test" }, tokens[7]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.OpenBraceToken }, tokens[8]);
 
-        Assert.AreEqual(tokens[9], new() { Declaration = CSharpToken.PublicKeyword });
-        Assert.AreEqual(tokens[10], new() { Declaration = CSharpToken.ClassDeclaration });
-        Assert.AreEqual(tokens[11], new() { Declaration = CSharpToken.Symbol, Identifier = "TestModel" });
-        Assert.AreEqual(tokens[12], new() { Declaration = CSharpToken.OpenBraceToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.PublicKeyword }, tokens[9]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.ClassDeclaration }, tokens[10]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "TestModel" }, tokens[11]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.OpenBraceToken }, tokens[12]);
 
-        Assert.AreEqual(tokens[13], new() { Declaration = CSharpToken.PublicKeyword });
-        Assert.AreEqual(tokens[14], new() { Declaration = CSharpToken.Symbol, Identifier = "int" });
-        Assert.AreEqual(tokens[15], new() { Declaration = CSharpToken.Symbol, Identifier = "Property1" });
-        Assert.AreEqual(tokens[16], new() { Declaration = CSharpToken.OpenBraceToken });
-        Assert.AreEqual(tokens[17], new() { Declaration = CSharpToken.PropertyGetAccessorKeyword });
-        Assert.AreEqual(tokens[18], new() { Declaration = CSharpToken.SemicolonToken });
-        Assert.AreEqual(tokens[19], new() { Declaration = CSharpToken.PropertySetAccessorKeyword });
-        Assert.AreEqual(tokens[20], new() { Declaration = CSharpToken.SemicolonToken });
-        Assert.AreEqual(tokens[21], new() { Declaration = CSharpToken.CloseBraceToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.PublicKeyword }, tokens[13]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "int" }, tokens[14]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "Property1" }, tokens[15]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.OpenBraceToken }, tokens[16]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.PropertyGetAccessorKeyword }, tokens[17]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[18]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.PropertySetAccessorKeyword }, tokens[19]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[20]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.CloseBraceToken }, tokens[21]);
 
-        Assert.AreEqual(tokens[22], new() { Declaration = CSharpToken.PublicKeyword });
-        Assert.AreEqual(tokens[23], new() { Declaration = CSharpToken.Symbol, Identifier = "int" });
-        Assert.AreEqual(tokens[24], new() { Declaration = CSharpToken.Symbol, Identifier = "Property2" });
-        Assert.AreEqual(tokens[25], new() { Declaration = CSharpToken.OpenBraceToken });
-        Assert.AreEqual(tokens[26], new() { Declaration = CSharpToken.PropertyGetAccessorKeyword });
-        Assert.AreEqual(tokens[27], new() { Declaration = CSharpToken.SemicolonToken });
-        Assert.AreEqual(tokens[28], new() { Declaration = CSharpToken.PropertySetAccessorKeyword });
-        Assert.AreEqual(tokens[29], new() { Declaration = CSharpToken.SemicolonToken });
-        Assert.AreEqual(tokens[30], new() { Declaration = CSharpToken.CloseBraceToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.PublicKeyword }, tokens[22]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "int" }, tokens[23]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "Property2" }, tokens[24]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.OpenBraceToken }, tokens[25]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.PropertyGetAccessorKeyword }, tokens[26]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[27]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.PropertySetAccessorKeyword }, tokens[28]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[29]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.CloseBraceToken }, tokens[30]);
 
-        Assert.AreEqual(tokens[31], new() { Declaration = CSharpToken.CloseBraceToken });
-        Assert.AreEqual(tokens[32], new() { Declaration = CSharpToken.CloseBraceToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.CloseBraceToken }, tokens[31]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.CloseBraceToken }, tokens[32]);
     }
 
     [TestMethod]
     public void TokenizesCSharp10Model()
     {
-        var tokens = Tokenize(@"
+        var tokens = TokenizeCSharp(@"
             using System;
             using System.Text;
 
@@ -99,44 +84,44 @@ public class TokenizerTests
 
         Assert.AreEqual(32, tokens.Length);
 
-        Assert.AreEqual(tokens[0], new() { Declaration = CSharpToken.UsingKeyword });
-        Assert.AreEqual(tokens[1], new() { Declaration = CSharpToken.Symbol, Identifier = "System" });
-        Assert.AreEqual(tokens[2], new() { Declaration = CSharpToken.SemicolonToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.UsingKeyword }, tokens[0]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "System" }, tokens[1]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[2]);
 
-        Assert.AreEqual(tokens[3], new() { Declaration = CSharpToken.UsingKeyword });
-        Assert.AreEqual(tokens[4], new() { Declaration = CSharpToken.Symbol, Identifier = "System.Text" });
-        Assert.AreEqual(tokens[5], new() { Declaration = CSharpToken.SemicolonToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.UsingKeyword }, tokens[3]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "System.Text" }, tokens[4]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[5]);
 
-        Assert.AreEqual(tokens[6], new() { Declaration = CSharpToken.NamespaceDeclaration });
-        Assert.AreEqual(tokens[7], new() { Declaration = CSharpToken.Symbol, Identifier = "Test" });
-        Assert.AreEqual(tokens[8], new() { Declaration = CSharpToken.SemicolonToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.NamespaceDeclaration }, tokens[6]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "Test" }, tokens[7]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[8]);
 
-        Assert.AreEqual(tokens[9], new() { Declaration = CSharpToken.PublicKeyword });
-        Assert.AreEqual(tokens[10], new() { Declaration = CSharpToken.ClassDeclaration });
-        Assert.AreEqual(tokens[11], new() { Declaration = CSharpToken.Symbol, Identifier = "TestModel" });
-        Assert.AreEqual(tokens[12], new() { Declaration = CSharpToken.OpenBraceToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.PublicKeyword }, tokens[9]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.ClassDeclaration }, tokens[10]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "TestModel" }, tokens[11]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.OpenBraceToken }, tokens[12]);
 
-        Assert.AreEqual(tokens[13], new() { Declaration = CSharpToken.PublicKeyword });
-        Assert.AreEqual(tokens[14], new() { Declaration = CSharpToken.Symbol, Identifier = "int" });
-        Assert.AreEqual(tokens[15], new() { Declaration = CSharpToken.Symbol, Identifier = "Property1" });
-        Assert.AreEqual(tokens[16], new() { Declaration = CSharpToken.OpenBraceToken });
-        Assert.AreEqual(tokens[17], new() { Declaration = CSharpToken.PropertyGetAccessorKeyword });
-        Assert.AreEqual(tokens[18], new() { Declaration = CSharpToken.SemicolonToken });
-        Assert.AreEqual(tokens[19], new() { Declaration = CSharpToken.PropertyInitAccessorKeyword });
-        Assert.AreEqual(tokens[20], new() { Declaration = CSharpToken.SemicolonToken });
-        Assert.AreEqual(tokens[21], new() { Declaration = CSharpToken.CloseBraceToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.PublicKeyword }, tokens[13]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "int" }, tokens[14]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "Property1" }, tokens[15]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.OpenBraceToken }, tokens[16]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.PropertyGetAccessorKeyword }, tokens[17]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[18]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.PropertyInitAccessorKeyword }, tokens[19]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[20]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.CloseBraceToken }, tokens[21]);
 
-        Assert.AreEqual(tokens[22], new() { Declaration = CSharpToken.PublicKeyword });
-        Assert.AreEqual(tokens[23], new() { Declaration = CSharpToken.Symbol, Identifier = "int" });
-        Assert.AreEqual(tokens[24], new() { Declaration = CSharpToken.Symbol, Identifier = "Property2" });
-        Assert.AreEqual(tokens[25], new() { Declaration = CSharpToken.OpenBraceToken });
-        Assert.AreEqual(tokens[26], new() { Declaration = CSharpToken.PropertyGetAccessorKeyword });
-        Assert.AreEqual(tokens[27], new() { Declaration = CSharpToken.SemicolonToken });
-        Assert.AreEqual(tokens[28], new() { Declaration = CSharpToken.PropertySetAccessorKeyword });
-        Assert.AreEqual(tokens[29], new() { Declaration = CSharpToken.SemicolonToken });
-        Assert.AreEqual(tokens[30], new() { Declaration = CSharpToken.CloseBraceToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.PublicKeyword }, tokens[22]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "int" }, tokens[23]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "Property2" }, tokens[24]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.OpenBraceToken }, tokens[25]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.PropertyGetAccessorKeyword }, tokens[26]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[27]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.PropertySetAccessorKeyword }, tokens[28]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[29]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.CloseBraceToken }, tokens[30]);
 
-        Assert.AreEqual(tokens[31], new() { Declaration = CSharpToken.CloseBraceToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.CloseBraceToken }, tokens[31]);
     }
 
     [TestMethod]
@@ -148,7 +133,7 @@ public class TokenizerTests
         // Identifiers that start without a symbol-terminating character should not then match a reserved keyword
         // Example: _get should become ["_get"] and not ["_", Keyword.Get]
 
-        var tokens = Tokenize(@"            
+        var tokens = TokenizeCSharp(@"            
             public class Test
             {
                 public int[] TestField;
@@ -162,71 +147,71 @@ public class TokenizerTests
 
         Assert.AreEqual(52, tokens.Length);
 
-        Assert.AreEqual(tokens[0], new() { Declaration = CSharpToken.PublicKeyword });
-        Assert.AreEqual(tokens[1], new() { Declaration = CSharpToken.ClassDeclaration });
-        Assert.AreEqual(tokens[2], new() { Declaration = CSharpToken.Symbol, Identifier = "Test" });
-        Assert.AreEqual(tokens[3], new() { Declaration = CSharpToken.OpenBraceToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.PublicKeyword }, tokens[0]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.ClassDeclaration }, tokens[1]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "Test" }, tokens[2]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.OpenBraceToken }, tokens[3]);
 
-        Assert.AreEqual(tokens[4], new() { Declaration = CSharpToken.PublicKeyword });
-        Assert.AreEqual(tokens[5], new() { Declaration = CSharpToken.Symbol, Identifier = "int" });
-        Assert.AreEqual(tokens[6], new() { Declaration = CSharpToken.OpenSquareBracketToken });
-        Assert.AreEqual(tokens[7], new() { Declaration = CSharpToken.CloseSquareBracketToken });
-        Assert.AreEqual(tokens[8], new() { Declaration = CSharpToken.Symbol, Identifier = "TestField" });
-        Assert.AreEqual(tokens[9], new() { Declaration = CSharpToken.SemicolonToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.PublicKeyword }, tokens[4]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "int" }, tokens[5]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.OpenSquareBracketToken }, tokens[6]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.CloseSquareBracketToken }, tokens[7]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "TestField" }, tokens[8]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[9]);
 
-        Assert.AreEqual(tokens[10], new() { Declaration = CSharpToken.PublicKeyword });
-        Assert.AreEqual(tokens[11], new() { Declaration = CSharpToken.Symbol, Identifier = "DateTime" });
-        Assert.AreEqual(tokens[12], new() { Declaration = CSharpToken.Symbol, Identifier = "TestProperty" });
-        Assert.AreEqual(tokens[13], new() { Declaration = CSharpToken.LambdaBodyToken });
-        Assert.AreEqual(tokens[14], new() { Declaration = CSharpToken.Symbol, Identifier = "new" });
-        Assert.AreEqual(tokens[15], new() { Declaration = CSharpToken.OpenBracketToken });
-        Assert.AreEqual(tokens[16], new() { Declaration = CSharpToken.CloseBracketToken });
-        Assert.AreEqual(tokens[17], new() { Declaration = CSharpToken.SemicolonToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.PublicKeyword }, tokens[10]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "DateTime" }, tokens[11]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "TestProperty" }, tokens[12]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.LambdaBodyToken }, tokens[13]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "new" }, tokens[14]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.OpenBracketToken }, tokens[15]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.CloseBracketToken }, tokens[16]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[17]);
 
-        Assert.AreEqual(tokens[18], new() { Declaration = CSharpToken.PublicKeyword });
-        Assert.AreEqual(tokens[19], new() { Declaration = CSharpToken.Symbol, Identifier = "int" });
-        Assert.AreEqual(tokens[20], new() { Declaration = CSharpToken.OpenSquareBracketToken });
-        Assert.AreEqual(tokens[21], new() { Declaration = CSharpToken.CloseSquareBracketToken });
-        Assert.AreEqual(tokens[22], new() { Declaration = CSharpToken.QuestionMarkToken });
-        Assert.AreEqual(tokens[23], new() { Declaration = CSharpToken.Symbol, Identifier = "NullableArray" });
-        Assert.AreEqual(tokens[24], new() { Declaration = CSharpToken.LambdaBodyToken });
-        Assert.AreEqual(tokens[25], new() { Declaration = CSharpToken.Symbol, Identifier = "new" });
-        Assert.AreEqual(tokens[26], new() { Declaration = CSharpToken.OpenBracketToken });
-        Assert.AreEqual(tokens[27], new() { Declaration = CSharpToken.CloseBracketToken });
-        Assert.AreEqual(tokens[28], new() { Declaration = CSharpToken.SemicolonToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.PublicKeyword }, tokens[18]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "int" }, tokens[19]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.OpenSquareBracketToken }, tokens[20]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.CloseSquareBracketToken }, tokens[21]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.QuestionMarkToken }, tokens[22]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "NullableArray" }, tokens[23]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.LambdaBodyToken }, tokens[24]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "new" }, tokens[25]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.OpenBracketToken }, tokens[26]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.CloseBracketToken }, tokens[27]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[28]);
 
-        Assert.AreEqual(tokens[29], new() { Declaration = CSharpToken.PublicKeyword });
-        Assert.AreEqual(tokens[30], new() { Declaration = CSharpToken.Symbol, Identifier = "int" });
-        Assert.AreEqual(tokens[31], new() { Declaration = CSharpToken.Symbol, Identifier = "_get" });
-        Assert.AreEqual(tokens[32], new() { Declaration = CSharpToken.OpenBraceToken });
-        Assert.AreEqual(tokens[33], new() { Declaration = CSharpToken.PropertyGetAccessorKeyword });
-        Assert.AreEqual(tokens[34], new() { Declaration = CSharpToken.SemicolonToken });
-        Assert.AreEqual(tokens[35], new() { Declaration = CSharpToken.PropertyInitAccessorKeyword });
-        Assert.AreEqual(tokens[36], new() { Declaration = CSharpToken.SemicolonToken });
-        Assert.AreEqual(tokens[37], new() { Declaration = CSharpToken.CloseBraceToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.PublicKeyword }, tokens[29]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "int" }, tokens[30]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "_get" }, tokens[31]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.OpenBraceToken }, tokens[32]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.PropertyGetAccessorKeyword }, tokens[33]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[34]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.PropertyInitAccessorKeyword }, tokens[35]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[36]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.CloseBraceToken }, tokens[37]);
 
-        Assert.AreEqual(tokens[38], new() { Declaration = CSharpToken.PublicKeyword });
-        Assert.AreEqual(tokens[39], new() { Declaration = CSharpToken.Symbol, Identifier = "int" });
-        Assert.AreEqual(tokens[40], new() { Declaration = CSharpToken.Symbol, Identifier = "_set" });
-        Assert.AreEqual(tokens[41], new() { Declaration = CSharpToken.SemicolonToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.PublicKeyword }, tokens[38]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "int" }, tokens[39]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "_set" }, tokens[40]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[41]);
 
-        Assert.AreEqual(tokens[42], new() { Declaration = CSharpToken.PublicKeyword });
-        Assert.AreEqual(tokens[43], new() { Declaration = CSharpToken.Symbol, Identifier = "int" });
-        Assert.AreEqual(tokens[44], new() { Declaration = CSharpToken.PropertyInitAccessorKeyword });
-        Assert.AreEqual(tokens[45], new() { Declaration = CSharpToken.OpenBraceToken });
-        Assert.AreEqual(tokens[46], new() { Declaration = CSharpToken.PropertyGetAccessorKeyword });
-        Assert.AreEqual(tokens[47], new() { Declaration = CSharpToken.SemicolonToken });
-        Assert.AreEqual(tokens[48], new() { Declaration = CSharpToken.PropertySetAccessorKeyword });
-        Assert.AreEqual(tokens[49], new() { Declaration = CSharpToken.SemicolonToken });
-        Assert.AreEqual(tokens[50], new() { Declaration = CSharpToken.CloseBraceToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.PublicKeyword }, tokens[42]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "int" }, tokens[43]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.PropertyInitAccessorKeyword }, tokens[44]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.OpenBraceToken }, tokens[45]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.PropertyGetAccessorKeyword }, tokens[46]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[47]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.PropertySetAccessorKeyword }, tokens[48]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[49]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.CloseBraceToken }, tokens[50]);
 
-        Assert.AreEqual(tokens[51], new() { Declaration = CSharpToken.CloseBraceToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.CloseBraceToken }, tokens[51]);
     }
 
     [TestMethod]
     public void TokenizesComplexModelWithImplementedInterfaces()
     {
-        var tokens = Tokenize(@"
+        var tokens = TokenizeCSharp(@"
             public class ComplexModel : IComplexModel, ComplexBase
             {
                 public int _field => 3;
@@ -236,37 +221,37 @@ public class TokenizerTests
 
         Assert.AreEqual(25, tokens.Length);
 
-        Assert.AreEqual(tokens[0], new() { Declaration = CSharpToken.PublicKeyword });
-        Assert.AreEqual(tokens[1], new() { Declaration = CSharpToken.ClassDeclaration });
-        Assert.AreEqual(tokens[2], new() { Declaration = CSharpToken.Symbol, Identifier = "ComplexModel" });
-        Assert.AreEqual(tokens[3], new() { Declaration = CSharpToken.ColonToken });
-        Assert.AreEqual(tokens[4], new() { Declaration = CSharpToken.Symbol, Identifier = "IComplexModel" });
-        Assert.AreEqual(tokens[5], new() { Declaration = CSharpToken.CommaToken });
-        Assert.AreEqual(tokens[6], new() { Declaration = CSharpToken.Symbol, Identifier = "ComplexBase" });
-        Assert.AreEqual(tokens[7], new() { Declaration = CSharpToken.OpenBraceToken });
-        Assert.AreEqual(tokens[8], new() { Declaration = CSharpToken.PublicKeyword });
-        Assert.AreEqual(tokens[9], new() { Declaration = CSharpToken.Symbol, Identifier = "int" });
-        Assert.AreEqual(tokens[10], new() { Declaration = CSharpToken.Symbol, Identifier = "_field" });
-        Assert.AreEqual(tokens[11], new() { Declaration = CSharpToken.LambdaBodyToken });
-        Assert.AreEqual(tokens[12], new() { Declaration = CSharpToken.Symbol, Identifier = "3" });
-        Assert.AreEqual(tokens[13], new() { Declaration = CSharpToken.SemicolonToken });
-        Assert.AreEqual(tokens[14], new() { Declaration = CSharpToken.PublicKeyword });
-        Assert.AreEqual(tokens[15], new() { Declaration = CSharpToken.Symbol, Identifier = "DateTime" });
-        Assert.AreEqual(tokens[16], new() { Declaration = CSharpToken.QuestionMarkToken });
-        Assert.AreEqual(tokens[17], new() { Declaration = CSharpToken.Symbol, Identifier = "Property" });
-        Assert.AreEqual(tokens[18], new() { Declaration = CSharpToken.OpenBraceToken });
-        Assert.AreEqual(tokens[19], new() { Declaration = CSharpToken.PropertyGetAccessorKeyword });
-        Assert.AreEqual(tokens[20], new() { Declaration = CSharpToken.SemicolonToken });
-        Assert.AreEqual(tokens[21], new() { Declaration = CSharpToken.PropertyInitAccessorKeyword });
-        Assert.AreEqual(tokens[22], new() { Declaration = CSharpToken.SemicolonToken });
-        Assert.AreEqual(tokens[23], new() { Declaration = CSharpToken.CloseBraceToken });
-        Assert.AreEqual(tokens[24], new() { Declaration = CSharpToken.CloseBraceToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.PublicKeyword }, tokens[0]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.ClassDeclaration }, tokens[1]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "ComplexModel" }, tokens[2]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.ColonToken }, tokens[3]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "IComplexModel" }, tokens[4]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.CommaToken }, tokens[5]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "ComplexBase" }, tokens[6]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.OpenBraceToken }, tokens[7]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.PublicKeyword }, tokens[8]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "int" }, tokens[9]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "_field" }, tokens[10]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.LambdaBodyToken }, tokens[11]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "3" }, tokens[12]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[13]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.PublicKeyword }, tokens[14]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "DateTime" }, tokens[15]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.QuestionMarkToken }, tokens[16]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "Property" }, tokens[17]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.OpenBraceToken }, tokens[18]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.PropertyGetAccessorKeyword }, tokens[19]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[20]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.PropertyInitAccessorKeyword }, tokens[21]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[22]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.CloseBraceToken }, tokens[23]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.CloseBraceToken }, tokens[24]);
     }
 
     [TestMethod]
     public void TokenizesComplexModelWithConstructor()
     {
-        var tokens = Tokenize(@"
+        var tokens = TokenizeCSharp(@"
             public class ModelWithConstructor
             {
                 public readonly int _x;
@@ -281,32 +266,32 @@ public class TokenizerTests
 
         Assert.AreEqual(27, tokens.Length);
 
-        Assert.AreEqual(tokens[0], new() { Declaration = CSharpToken.PublicKeyword });
-        Assert.AreEqual(tokens[1], new() { Declaration = CSharpToken.ClassDeclaration });
-        Assert.AreEqual(tokens[2], new() { Declaration = CSharpToken.Symbol, Identifier = "ModelWithConstructor" });
-        Assert.AreEqual(tokens[3], new() { Declaration = CSharpToken.OpenBraceToken });
-        Assert.AreEqual(tokens[4], new() { Declaration = CSharpToken.PublicKeyword });
-        Assert.AreEqual(tokens[5], new() { Declaration = CSharpToken.ReadonlyKeyword });
-        Assert.AreEqual(tokens[6], new() { Declaration = CSharpToken.Symbol, Identifier = "int" });
-        Assert.AreEqual(tokens[7], new() { Declaration = CSharpToken.Symbol, Identifier = "_x" });
-        Assert.AreEqual(tokens[8], new() { Declaration = CSharpToken.SemicolonToken });
-        Assert.AreEqual(tokens[9], new() { Declaration = CSharpToken.PrivateKeyword });
-        Assert.AreEqual(tokens[10], new() { Declaration = CSharpToken.Symbol, Identifier = "string" });
-        Assert.AreEqual(tokens[11], new() { Declaration = CSharpToken.QuestionMarkToken });
-        Assert.AreEqual(tokens[12], new() { Declaration = CSharpToken.Symbol, Identifier = "TestProperty" });
-        Assert.AreEqual(tokens[13], new() { Declaration = CSharpToken.OpenBraceToken });
-        Assert.AreEqual(tokens[14], new() { Declaration = CSharpToken.PropertyGetAccessorKeyword });
-        Assert.AreEqual(tokens[15], new() { Declaration = CSharpToken.SemicolonToken });
-        Assert.AreEqual(tokens[16], new() { Declaration = CSharpToken.PropertyInitAccessorKeyword });
-        Assert.AreEqual(tokens[17], new() { Declaration = CSharpToken.SemicolonToken });
-        Assert.AreEqual(tokens[18], new() { Declaration = CSharpToken.CloseBraceToken });
-        Assert.AreEqual(tokens[19], new() { Declaration = CSharpToken.PublicKeyword });
-        Assert.AreEqual(tokens[20], new() { Declaration = CSharpToken.Symbol, Identifier = "ModelWithConstructor" });
-        Assert.AreEqual(tokens[21], new() { Declaration = CSharpToken.OpenBracketToken });
-        Assert.AreEqual(tokens[22], new() { Declaration = CSharpToken.CloseBracketToken });
-        Assert.AreEqual(tokens[23], new() { Declaration = CSharpToken.OpenBraceToken });
-        Assert.AreEqual(tokens[24], new() { Declaration = CSharpToken.SemicolonToken });
-        Assert.AreEqual(tokens[25], new() { Declaration = CSharpToken.CloseBraceToken });
-        Assert.AreEqual(tokens[26], new() { Declaration = CSharpToken.CloseBraceToken });
+        Assert.AreEqual(new() { Declaration = CSharpToken.PublicKeyword }, tokens[0]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.ClassDeclaration }, tokens[1]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "ModelWithConstructor" }, tokens[2]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.OpenBraceToken }, tokens[3]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.PublicKeyword }, tokens[4]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.ReadonlyKeyword }, tokens[5]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "int" }, tokens[6]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "_x" }, tokens[7]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[8]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.PrivateKeyword }, tokens[9]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "string" }, tokens[10]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.QuestionMarkToken }, tokens[11]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "TestProperty" }, tokens[12]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.OpenBraceToken }, tokens[13]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.PropertyGetAccessorKeyword }, tokens[14]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[15]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.PropertyInitAccessorKeyword }, tokens[16]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[17]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.CloseBraceToken }, tokens[18]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.PublicKeyword }, tokens[19]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.Symbol, Identifier = "ModelWithConstructor" }, tokens[20]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.OpenBracketToken }, tokens[21]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.CloseBracketToken }, tokens[22]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.OpenBraceToken }, tokens[23]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.SemicolonToken }, tokens[24]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.CloseBraceToken }, tokens[25]);
+        Assert.AreEqual(new() { Declaration = CSharpToken.CloseBraceToken }, tokens[26]);
     }
 }

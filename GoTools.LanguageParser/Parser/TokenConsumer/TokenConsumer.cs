@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GoTools.LanguageParser.ParsedToken;
+using GoTools.LanguageParser.Parser.Exceptions;
 
 namespace GoTools.LanguageParser.Parser.TokenConsumer;
 
@@ -24,8 +25,7 @@ public class TokenConsumer<TLanguageToken> : ITokenConsumer<TLanguageToken> wher
 
         if (anyToken.Length > 0 && anyToken.All(expected => !_tokenEqualityComparer.Equals(token.Declaration, expected)))
         {
-            var expected = string.Join(", ", anyToken);
-            throw new($"Expected one of {expected} but instead found {token.Declaration}");
+            throw new SyntaxErrorException<TLanguageToken>(anyToken, token.Declaration);
         }
     }
 
@@ -33,12 +33,12 @@ public class TokenConsumer<TLanguageToken> : ITokenConsumer<TLanguageToken> wher
     {
         if (!_tokens.TryPop(out var token))
         {
-            throw new("Syntax error: expected identifier but found end of file");
+            throw new SyntaxErrorException<TLanguageToken>(_symbolToken);
         }
 
         if (!_tokenEqualityComparer.Equals(_symbolToken, token.Declaration))
         {
-            throw new($"Syntax error: expected identifier, got {token.Declaration}");
+            throw new SyntaxErrorException<TLanguageToken>(_symbolToken, token.Declaration);
         }
 
         return token.Identifier;

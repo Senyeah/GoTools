@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using GoTools.LanguageParser.ParsedToken;
+using GoTools.LanguageParser.Parser.Exceptions;
 using GoTools.LanguageParser.Parser.TokenConsumer;
 using GoTools.LanguageParser.Tokenizer.CSharp;
 
@@ -49,7 +50,7 @@ public sealed class CSharpModelParser : IModelParser
 
             if (modelNames.Contains(model.Name!))
             {
-                throw new($"Duplicate definition {model.Name}");
+                throw new DuplicateIdentifierException(model.Name);
             }
 
             modelNames.Add(model.Name!);
@@ -135,20 +136,20 @@ public sealed class CSharpModelParser : IModelParser
 
         while (_tokenConsumer.IsAnyConsumable(CSharpToken.PublicKeyword, CSharpToken.PrivateKeyword))
         {
-            if (_tokenConsumer.IsAnyConsumableAhead(from: 1, CSharpToken.ClassDeclaration, CSharpToken.RecordDeclaration))
+            if (_tokenConsumer.IsAnyConsumableAhead(1, CSharpToken.ClassDeclaration, CSharpToken.RecordDeclaration))
             {
                 var childModel = ParseClassDeclaration();
 
                 if (childNames.Contains(childModel.Name!))
                 {
-                    throw new($"Duplicate definition {childModel.Name}");
+                    throw new DuplicateIdentifierException(childModel.Name);
                 }
 
                 childNames.Add(childModel.Name!);
                 children.Add(childModel);
             }
-            else if (_tokenConsumer.IsConsumableAhead(from: 1, CSharpToken.Symbol, CSharpToken.OpenBracketToken)
-                        || _tokenConsumer.IsConsumableAhead(from: 1, CSharpToken.Symbol, CSharpToken.Symbol, CSharpToken.OpenBracketToken))
+            else if (_tokenConsumer.IsConsumableAhead(1, CSharpToken.Symbol, CSharpToken.OpenBracketToken)
+                        || _tokenConsumer.IsConsumableAhead(1, CSharpToken.Symbol, CSharpToken.Symbol, CSharpToken.OpenBracketToken))
             {
                 // Constructor/method: consume symbols but emit no metadata
                 ParseAndDiscardMethod();
@@ -160,7 +161,7 @@ public sealed class CSharpModelParser : IModelParser
 
                 if (propertyNames.Contains(property.Name!))
                 {
-                    throw new($"Duplicate property name {property.Name}");
+                    throw new DuplicateIdentifierException(property.Name);
                 }
 
                 propertyNames.Add(property.Name!);
@@ -216,13 +217,14 @@ public sealed class CSharpModelParser : IModelParser
             if (_tokenConsumer.IsConsumable(CSharpToken.PropertySetAccessorKeyword))
             {
                 _tokenConsumer.Consume(CSharpToken.PropertySetAccessorKeyword);
+                _tokenConsumer.Consume(CSharpToken.SemicolonToken);
             }
-            else
+            else if (_tokenConsumer.IsConsumable(CSharpToken.PropertyInitAccessorKeyword))
             {
                 _tokenConsumer.Consume(CSharpToken.PropertyInitAccessorKeyword);
+                _tokenConsumer.Consume(CSharpToken.SemicolonToken);
             }
 
-            _tokenConsumer.Consume(CSharpToken.SemicolonToken);
             _tokenConsumer.Consume(CSharpToken.CloseBraceToken);
         }
 
